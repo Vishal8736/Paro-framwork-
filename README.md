@@ -54,7 +54,7 @@ PARO-ULTRA is an advanced, autonomous AI-driven pentesting framework built in Py
 ### Step-by-Step Installation
 1. **Clone the Repository**:
 
-2. git clone https://github.com/yourusername/paro-ultra.git cd paro-ultra
+2. git clone https://github.com/Vishal8736/Paro-framwork-
 
 3. python3 -c "import flask, flask_sqlalchemy, requests; print('Python deps OK')"
 
