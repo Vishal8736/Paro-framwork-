@@ -60,6 +60,12 @@ PARO-ULTRA is an advanced, autonomous AI-driven pentesting framework built in Py
 
 4. 
 4. **Install External Tools**:
+5. go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest go install github.com/tomnomnom/assetfinder@latest go install github.com/OWASP/Amass/v3/cmd/amass@latest go install github.com/projectdiscovery/httpx/cmd/httpx@latest pip3 install wafw00f go install github.com/tomnomnom/waybackurls@latest go install github.com/projectdiscovery/katana/cmd/katana@latest go install github.com/hahwul/dalfox/v2@latest go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest nuclei -update-templates # Downloads 3000+ templates sudo apt install -y nikto pip3 install sstimap
+
+6. 
+Copy code
+- Verify: `which subfinder assetfinder amass httpx wafw00f waybackurls katana dalfox nuclei nikto sstimap`
+- 
 - Add `~/go/bin` to PATH: `export PATH=$PATH:~/go/bin` (add to ~/.bashrc).
 
 - Verify: `which subfinder assetfinder amass httpx wafw00f waybackurls katana dalfox nuclei nikto sstimap`
@@ -102,3 +108,4 @@ PARO-ULTRA is for educational and authorized security testing only. Use on unaut
 ## Contact
 - Author: @mr._vishal_hacker
 - vishalsharma852863@gmail.com
+  
