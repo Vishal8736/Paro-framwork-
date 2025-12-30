@@ -86,8 +86,6 @@ PARO-ULTRA is an advanced, autonomous AI-driven pentesting framework built in Py
 - Input: `company.com`
 - Output: Discovers subdomains, filters WAF-protected ones, crawls URLs, matches patterns, scans for vulns, and displays results in the dashboard.
 
-## Screenshots
-*(Add images here, e.g., dashboard view)*
 
 ## Contributing
 Contributions are welcome! Please:
@@ -102,6 +100,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 PARO-ULTRA is for educational and authorized security testing only. Use on unauthorized targets is illegal. The authors are not responsible for misuse. Always obtain written permission before scanning.
 
 ## Contact
-- Author: [Your Name](https://github.com/yourusername)
-- Issues: [GitHub Issues](https://github.com/yourusername/paro-ultra/issues)
-
+- Author: @mr._vishal_hacker
+- vishalsharma852863@gmail.com
