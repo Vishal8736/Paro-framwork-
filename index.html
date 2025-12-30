@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARO-ULTRA Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: #ffffff; }
+        .card { background-color: #1e1e1e; border: 1px solid #333; }
+        #logArea { background-color: #000; color: #0f0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">PARO-ULTRA Autonomous AI Pentesting Framework</h1>
+        <form id="scanForm" class="mb-4">
+            <div class="mb-3">
+                <label for="domain" class="form-label">Target Domain</label>
+                <input type="text" class="form-control bg-dark text-light" id="domain" name="domain" placeholder="e.g., example.com" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Start Audit</button>
+            <button type="button" class="btn btn-secondary" id="stopBtn" disabled>Stop Task</button>
+            <button type="button" class="btn btn-success" id="exportBtn">Export Report</button>
+        </form>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Subdomains</h5>
+                        <p class="card-text" id="subdomainsCount">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">URLs</h5>
+                        <p class="card-text" id="urlsCount">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Vulnerabilities</h5>
+                        <p class="card-text" id="vulnerabilitiesCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Real-time Activity Log</h2>
+        <div id="logArea" class="border p-3" style="height: 300px; overflow-y: scroll;"></div>
+        
+        <h2 class="mt-4">Deep Targets (Confirmed Bugs)</h2>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Severity</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="deepTargetsTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const logArea = document.getElementById('logArea');
+        const deepTargetsTable = document.getElementById('deepTargetsTable');
+        const subdomainsCount = document.getElementById('subdomainsCount');
+        const urlsCount = document.getElementById('urlsCount');
+        const vulnerabilitiesCount = document.getElementById('vulnerabilitiesCount');
+        const scanForm = document.getElementById('scanForm');
+        const stopBtn = document.getElementById('stopBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        let logInterval;
+        let countsInterval;
+
+        scanForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(scanForm);
+            const response = await fetch('/api/start_scan', { method: 'POST', body: formData });
+            if (response.ok) {
+                stopBtn.disabled = false;
+                logInterval = setInterval(fetchLogs, 1000);
+                countsInterval = setInterval(fetchCounts, 2000);
+                setInterval(fetchDeepTargets, 3000);
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            clearInterval(logInterval);
+            clearInterval(countsInterval);
+            stopBtn.disabled = true;
+        });
+
+        exportBtn.addEventListener('click', () => {
+            fetch('/api/get_deep_targets').then(r => r.json()).then(data => {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'paro_ultra_report.json';
+                a.click();
+            });
+        });
+
+        async function fetchLogs() {
+            const response = await fetch('/api/stream_logs');
+            const data = await response.json();
+            data.logs.forEach(log => {
+                logArea.innerHTML += log + '<br>';
+                logArea.scrollTop = logArea.scrollHeight;
+            });
+        }
+
+        async function fetchCounts() {
+            const response = await fetch('/api/get_counts');
+            const data = await response.json();
+            subdomainsCount.textContent = data.subdomains;
+            urlsCount.textContent = data.urls;
+            vulnerabilitiesCount.textContent = data.vulnerabilities;
+        }
+
+        async function fetchDeepTargets() {
+            const response = await fetch('/api/get_deep_targets');
+            const data = await response.json();
+            deepTargetsTable.innerHTML = data.map(dt => `
+                <tr>
+                    <td>${dt.url}</td>
+                    <td>${dt.severity}</td>
+                    <td>${dt.name}</td>
+                    <td>${dt.description}</td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
